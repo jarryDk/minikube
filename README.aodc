@@ -1,0 +1,27 @@
+= Minekube
+
+== Commands
+
+[source,bash]
+----
+minikube service list
+----
+
+[source,bash]
+----
+minikube service jaegertracing --url
+----
+
+== Minekube Documentation
+
+https://minikube.sigs.k8s.io/docs/
+
+
+== Kubernetes Documentation
+
+https://kubernetes.io/docs/home/
+
+
+== Using Kubernetes to Deploy PostgreSQL | Severalnines
+
+https://severalnines.com/database-blog/using-kubernetes-deploy-postgresql

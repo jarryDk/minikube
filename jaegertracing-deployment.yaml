@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaegertracing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jaegertracing
+  template:
+    metadata:
+      labels:
+        app: jaegertracing
+    spec:
+      containers:
+        - name: jaegertracing
+          image: jaegertracing/all-in-one:1.21
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5775
+            - containerPort: 6831
+            - containerPort: 6832
+            - containerPort: 5778
+            - containerPort: 16686
+            - containerPort: 14268
