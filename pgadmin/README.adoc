@@ -1,0 +1,34 @@
+= pgAdmin
+
+Non persistent version
+
+[source, bash]
+----
+kubectl create -f pgadmin-configmap.yaml
+
+kubectl create -f pgadmin-deployment.yaml
+
+kubectl create -f pgadmin-service.yaml
+
+minikube service pgadmin --url
+----
+
+Persistent version
+
+[source, bash]
+----
+kubectl create -f pgadmin-configmap.yaml
+
+kubectl create -f pgadmin-storage.yaml
+
+kubectl create -f pgadmin-storage-deployment.yaml
+
+kubectl create -f pgadmin-service.yaml
+
+minikube service pgadmin --url
+----
+
+
+== Links
+
+https://www.pgadmin.org/docs/pgadmin4/development/container_deployment.html[pgAdmin - Container Deployment]
