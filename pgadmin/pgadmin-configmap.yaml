@@ -7,4 +7,3 @@ metadata:
 data:
   PGADMIN_DEFAULT_EMAIL: pgadmin@jarry.dk
   PGADMIN_DEFAULT_PASSWORD: mysecretpassword
-  PGADMIN_CONFIG_LOGIN_BANNER : Authorised users only!

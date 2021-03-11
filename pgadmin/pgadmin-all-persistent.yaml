@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-config
+  labels:
+    app: pgadmin
+data:
+  PGADMIN_DEFAULT_EMAIL: pgadmin@jarry.dk
+  PGADMIN_DEFAULT_PASSWORD: mysecretpassword
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pgadmin-pv-volume
+  labels:
+    type: local
+    app: pgadmin
+spec:  
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/data/pgadmin
+    server: nfs.jarry.dk
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pgadmin-pv-claim
+  labels:
+    app: pgadmin  
+spec:
+  storageClassName: ""
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      securityContext:
+        runAsUser: 5050
+        fsGroup: 5050
+      containers:
+        - name: pgadmin
+          image: dpage/pgadmin4:5
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: pgadmin-config
+          volumeMounts:
+            - mountPath: /var/lib/pgadmin
+              name: pgadmindb
+      volumes:
+        - name: pgadmindb
+          persistentVolumeClaim:
+            claimName: pgadmin-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+  labels:
+    app: pgadmin
+spec:
+  type: NodePort
+  ports:
+   - port: 80
+  selector:
+   app: pgadmin

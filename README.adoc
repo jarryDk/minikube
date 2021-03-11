@@ -1,6 +1,33 @@
 = Minekube
 
+== Deployments
+
+=== PostgreSQL
+
+Deploy postgres:13.1
+
+link:postgres/README.adoc[postgres/README.adoc] 
+
+=== pgAdmin
+
+Deploy dpage/pgadmin4:5
+
+link:pgadmin/README.adoc[pgadmin/README.adoc] 
+
+=== Jaeger
+
+Deploy jaegertracing/all-in-one:1.21
+
+link:jaegertracing/README.adoc[jaegertracing/README.adoc] 
+
 == Commands
+
+https://minikube.sigs.k8s.io/docs/commands/[Minikube commands]
+
+[source,bash]
+----
+minikube dashboard
+----
 
 [source,bash]
 ----
@@ -16,12 +43,34 @@ minikube service jaegertracing --url
 
 https://minikube.sigs.k8s.io/docs/
 
+https://minikube.sigs.k8s.io/docs/handbook/controls/[Basic controls]
+
 
 == Kubernetes Documentation
 
 https://kubernetes.io/docs/home/
 
 
-== Using Kubernetes to Deploy PostgreSQL | Severalnines
+== Volumes
 
-https://severalnines.com/database-blog/using-kubernetes-deploy-postgresql
+Using podman for minikube we have some rescrition.
+
+- we can't use `hostPath` in `PersistentVolume`
+- we can't use `local` in `PersistentVolume`
+
+https://kubernetes.io/docs/concepts/storage/persistent-volumes/[Persistent Volumes | Kubernetes]
+
+=== Setup nsf
+
+Following https://mikebarkas.dev/2019/setup-nfs-for-minikube-persistent-storage/[Setup NFS For Minikube] can be a help.
+
+I stoped just before `Client Configuration` and is using `nfs` in configuration of volumes.
+
+
+
+
+
+
+
+
+

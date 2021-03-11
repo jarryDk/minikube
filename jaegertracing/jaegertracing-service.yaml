@@ -24,12 +24,12 @@ spec:
      targetPort: 5778
      name: tcp-5778
    - protocol: TCP
-     port: 16686
-     targetPort: 16686
-     name: tcp-16686
-   - protocol: TCP
      port: 14268
      targetPort: 14268
      name: tcp-14268
+   - protocol: TCP
+     port: 16686
+     targetPort: 16686
+     name: tcp-16686
   selector:
    app: jaegertracing

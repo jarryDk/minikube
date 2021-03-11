@@ -1,0 +1,65 @@
+= Jaeger
+
+Deploy jaegertracing/all-in-one:1.21
+
+Exposed ports
+
+- 5775 (UDP)
+- 6831 (UDP)
+- 6832 (UDP)
+- 5778 (TCP)
+- 14268 (TCP)
+- 16686 (TCP)
+
+[source, bash]
+----
+minikube service jaegertracing
+----
+
+[source, bash]
+----
+minikube service jaegertracing --url
+----
+
+
+Get port for GUI
+
+[source, bash]
+----
+kubectl get service jaegertracing --output='jsonpath="{.spec.ports[4].nodePort}"'
+----
+
+----
+$ kubectl get service jaegertracing --output='jsonpath={.spec.ports[4]}'
+{"name":"tcp-16686","nodePort":30171,"port":16686,"protocol":"TCP","targetPort":16686}
+----
+
+== Jaeger Deployments
+
+=== Non persistent version
+
+[source, bash]
+----
+kubectl create -f jaegertracing-deployment.yaml
+
+kubectl create -f jaegertracing-service.yaml
+
+minikube service jaegertracing --url
+----
+
+=== Persistent version - all in one
+
+[source, bash]
+----
+kubectl create -f jaegertracing-all.yaml
+----
+
+== Delete Jaeger Deployments
+
+=== Delete Non persistent version
+
+[source, bash]
+----
+kubectl delete service jaegertracing 
+kubectl delete deployment jaegertracing
+----

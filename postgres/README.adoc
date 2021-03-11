@@ -1,0 +1,91 @@
+= Postgres
+
+Deploy postgres:13.1
+
+- non persistent version
+- persistent version using NFS as store
+
+Credentials for postgres is set in postgres-configmap.yaml
+
+    POSTGRES_DB: hibernate_db
+    POSTGRES_USER: hibernate
+    POSTGRES_PASSWORD: hibernate
+
+Exposed ports
+
+- 5432
+
+[source, bash]
+----
+minikube service postgres
+----
+
+[source, bash]
+----
+minikube service postgres --url
+----
+
+== PostgreSQL Deployments
+
+=== Non persistent version
+
+[source, bash]
+----
+kubectl create -f postgres-configmap.yaml
+
+kubectl create -f postgres-deployment.yaml
+
+kubectl create -f postgres-service.yaml
+
+minikube service postgres --url
+----
+
+=== Persistent version
+
+[source, bash]
+----
+kubectl create -f postgres-configmap.yaml
+
+kubectl create -f postgres-pv-volume.yaml
+
+kubectl create -f postgres-pv-claim.yaml
+
+kubectl create -f postgres-deployment-persistent.yaml
+
+kubectl create -f postgres-service.yaml
+
+minikube service postgres --url
+----
+
+=== Persistent version - all in one
+
+[source, bash]
+----
+kubectl create -f postgres-all-persistent.yaml
+----
+
+== Delete PostgreSQL Deployments
+
+=== Delete Non persistent version
+
+[source, bash]
+----
+kubectl delete service postgres 
+kubectl delete deployment postgres
+kubectl delete configmap postgres-config
+----
+
+=== Delete Non persistent version
+
+[source, bash]
+----
+kubectl delete service postgres 
+kubectl delete deployment postgres
+kubectl delete configmap postgres-config
+kubectl delete persistentvolumeclaim postgres-pv-claim
+kubectl delete persistentvolume postgres-pv-volume
+----
+
+== Links
+
+https://severalnines.com/database-blog/using-kubernetes-deploy-postgresql[Using Kubernetes to Deploy PostgreSQL | Severalnines]

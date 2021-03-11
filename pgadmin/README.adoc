@@ -1,31 +1,89 @@
 = pgAdmin
 
-Non persistent version
+Deploy dpage/pgadmin4:5
+
+- non persistent version
+- persistent version using NFS as store
+
+Credentials for pgAdmin4 is set in pgadmin-configmap.yaml
+
+    PGADMIN_DEFAULT_EMAIL: pgadmin@jarry.dk
+    PGADMIN_DEFAULT_PASSWORD: mysecretpassword
+
+Exposed ports
+
+- 80
+
+[source, bash]
+----
+minikube service pgadmin
+----
+
+[source, bash]
+----
+minikube service pgadmin --url
+----
+
+
+== pgAdmin Deployments
+
+=== Non persistent version
 
 [source, bash]
 ----
 kubectl create -f pgadmin-configmap.yaml
 
-kubectl create -f pgadmin-deployment.yaml
+kubectl create -f pgadmin-deployment-non-persistent.yaml
 
 kubectl create -f pgadmin-service.yaml
 
 minikube service pgadmin --url
 ----
 
-Persistent version
+=== Persistent version
 
 [source, bash]
 ----
 kubectl create -f pgadmin-configmap.yaml
 
-kubectl create -f pgadmin-storage.yaml
+kubectl create -f pgadmin-pv-volume.yaml
 
-kubectl create -f pgadmin-storage-deployment.yaml
+kubectl create -f pgadmin-pv-claim.yaml
+
+kubectl create -f pgadmin-deployment-persistent.yaml
 
 kubectl create -f pgadmin-service.yaml
 
 minikube service pgadmin --url
+----
+
+=== Persistent version - all in one
+
+[source, bash]
+----
+kubectl create -f pgadmin-all-persistent.yaml
+----
+
+== Delete pgAdmin Deployments
+
+=== Delete Non persistent version
+
+[source, bash]
+----
+kubectl delete service pgadmin 
+kubectl delete deployment pgadmin
+kubectl delete configmap pgadmin-config
+----
+
+=== Delete Non persistent version
+
+[source, bash]
+----
+kubectl delete service pgadmin 
+kubectl delete deployment pgadmin
+kubectl delete configmap pgadmin-config
+kubectl delete persistentvolumeclaim pgadmin-pv-claim
+kubectl delete persistentvolume pgadmin-pv-volume
 ----
 
 

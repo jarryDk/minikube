@@ -1,0 +1,15 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: pgadmin-pv-volume
+  labels:
+    type: local
+    app: pgadmin
+spec:  
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /mnt/data/pgadmin
+    server: nfs.jarry.dk
