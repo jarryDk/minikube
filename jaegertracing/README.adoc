@@ -54,12 +54,19 @@ minikube service jaegertracing --url
 kubectl create -f jaegertracing-all.yaml
 ----
 
-== Delete Jaeger Deployments
-
 === Delete Non persistent version
 
 [source, bash]
 ----
 kubectl delete service jaegertracing 
 kubectl delete deployment jaegertracing
+----
+
+=== Use yaml file from jaegertracing
+
+https://github.com/jaegertracing/jaeger-kubernetes
+
+[source, bash]
+----
+kubectl create -f https://raw.githubusercontent.com/jaegertracing/jaeger-kubernetes/master/all-in-one/jaeger-all-in-one-template.yml
 ----
