@@ -1,5 +1,12 @@
 = Minekube
 
+To be make it possible to deploy from "local" registry are we starting `minikub` like this.
+
+[source,bash]
+----
+minikube start --driver=podman --insecure-registry "192.168.1.0/24"
+----
+
 == Deployments
 
 === PostgreSQL
@@ -46,9 +53,46 @@ https://minikube.sigs.k8s.io/docs/
 https://minikube.sigs.k8s.io/docs/handbook/controls/[Basic controls]
 
 
+=== Minikube temp registry
+
+We will use a `temp` registry runing on ip 192.168.1.36 - matching `--insecure-registry "192.168.1.0/24"` from when we started `minikube`.
+
+[source,bash]
+----
+podman run -it -p 5000:5000 --name registry registry:2
+----
+
+[source,bash]
+----
+podman build -f src/main/docker/Dockerfile.native -t quarkus/native/todo-app .
+podman push 192.168.1.36:5000/quarkus/native/todo-app
+----
+
+[source,bash]
+----
+echo '' >> /etc/containers/registries.conf
+echo '# Manual update' >> /etc/containers/registries.conf
+echo '[[registry]]' >> /etc/containers/registries.conf
+echo 'prefix = "192.168.1.36:5000"' >> /etc/containers/registries.conf
+echo 'location = "192.168.1.36:5000/quarkus"' >> /etc/containers/registries.conf
+echo 'insecure = true' >> /etc/containers/registries.conf
+----
+
+
 == Kubernetes Documentation
 
 https://kubernetes.io/docs/home/
+
+
+https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/[List all Container images in all namespaces]
+
+[source,bash]
+----
+kubectl get pods --all-namespaces -o jsonpath="{..image}" |\
+tr -s '[[:space:]]' '\n' |\
+sort |\
+uniq -c
+----
 
 
 == Volumes
@@ -65,12 +109,3 @@ https://kubernetes.io/docs/concepts/storage/persistent-volumes/[Persistent Volum
 Following https://mikebarkas.dev/2019/setup-nfs-for-minikube-persistent-storage/[Setup NFS For Minikube] can be a help.
 
 I stoped just before `Client Configuration` and is using `nfs` in configuration of volumes.
-
-
-
-
-
-
-
-
-
