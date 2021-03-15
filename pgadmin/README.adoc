@@ -29,30 +29,28 @@ minikube service pgadmin --url
 
 === Non persistent version
 
+*deploy-non-persistent.sh*
 [source, bash]
 ----
-kubectl create -f pgadmin-configmap.yaml
-
-kubectl create -f pgadmin-deployment-non-persistent.yaml
-
-kubectl create -f pgadmin-service.yaml
+kubectl apply -f pgadmin-configmap.yaml
+kubectl apply -f pgadmin-secret.yaml
+kubectl apply -f pgadmin-deployment-non-persistent.yaml
+kubectl apply -f pgadmin-service.yaml
 
 minikube service pgadmin --url
 ----
 
 === Persistent version
 
+*deploy-persistent.sh*
 [source, bash]
 ----
-kubectl create -f pgadmin-configmap.yaml
-
-kubectl create -f pgadmin-pv-volume.yaml
-
-kubectl create -f pgadmin-pv-claim.yaml
-
-kubectl create -f pgadmin-deployment-persistent.yaml
-
-kubectl create -f pgadmin-service.yaml
+kubectl apply -f pgadmin-configmap.yaml
+kubectl apply -f pgadmin-secret.yaml
+kubectl apply -f pgadmin-pv-volume.yaml
+kubectl apply -f pgadmin-pv-claim.yaml
+kubectl apply -f pgadmin-deployment-persistent.yaml
+kubectl apply -f pgadmin-service.yaml
 
 minikube service pgadmin --url
 ----
@@ -61,7 +59,7 @@ minikube service pgadmin --url
 
 [source, bash]
 ----
-kubectl create -f pgadmin-all-persistent.yaml
+kubectl apply -f pgadmin-all-persistent.yaml
 ----
 
 == Delete pgAdmin Deployments
@@ -70,22 +68,23 @@ kubectl create -f pgadmin-all-persistent.yaml
 
 [source, bash]
 ----
-kubectl delete service pgadmin 
-kubectl delete deployment pgadmin
-kubectl delete configmap pgadmin-config
+kubectl delete -f pgadmin-pgadmin-service.yaml
+kubectl delete -f pgadmin-deployment-non-persistent.yaml
+kubectl delete -f pgadmin-secret.yaml
+kubectl delete -f pgadmin-configmap.yaml
 ----
 
 === Delete Non persistent version
 
 [source, bash]
 ----
-kubectl delete service pgadmin 
-kubectl delete deployment pgadmin
-kubectl delete configmap pgadmin-config
-kubectl delete persistentvolumeclaim pgadmin-pv-claim
-kubectl delete persistentvolume pgadmin-pv-volume
+kubectl delete -f pgadmin-pgadmin-service.yaml
+kubectl delete -f pgadmin-deployment-persistent.yaml
+kubectl delete -f pgadmin-pv-claim.yaml
+kubectl delete -f pgadmin-pv-volume.yaml
+kubectl delete -f pgadmin-secret.yaml
+kubectl delete -f pgadmin-configmap.yaml
 ----
-
 
 == Links
 

@@ -31,11 +31,10 @@ minikube service postgres --url
 
 [source, bash]
 ----
-kubectl create -f postgres-configmap.yaml
-
-kubectl create -f postgres-deployment.yaml
-
-kubectl create -f postgres-service.yaml
+kubectl apply -f postgres-configmap.yaml
+kubectl apply -f postgres-secret.yaml
+kubectl apply -f postgres-deployment-non-persistent.yaml
+kubectl apply -f postgres-service.yaml
 
 minikube service postgres --url
 ----
@@ -44,15 +43,12 @@ minikube service postgres --url
 
 [source, bash]
 ----
-kubectl create -f postgres-configmap.yaml
-
-kubectl create -f postgres-pv-volume.yaml
-
-kubectl create -f postgres-pv-claim.yaml
-
-kubectl create -f postgres-deployment-persistent.yaml
-
-kubectl create -f postgres-service.yaml
+kubectl apply -f postgres-configmap.yaml
+kubectl apply -f postgres-secret.yaml
+kubectl apply -f postgres-pv-volume.yaml
+kubectl apply -f postgres-pv-claim.yaml
+kubectl apply -f postgres-deployment-persistent.yaml
+kubectl apply -f postgres-service.yaml
 
 minikube service postgres --url
 ----
@@ -61,7 +57,7 @@ minikube service postgres --url
 
 [source, bash]
 ----
-kubectl create -f postgres-all-persistent.yaml
+kubectl apply -f postgres-all-persistent.yaml
 ----
 
 == Delete PostgreSQL Deployments
@@ -70,20 +66,23 @@ kubectl create -f postgres-all-persistent.yaml
 
 [source, bash]
 ----
-kubectl delete service postgres 
-kubectl delete deployment postgres
-kubectl delete configmap postgres-config
+kubectl delete -f postgres-service.yaml
+kubectl delete -f postgres-deployment-non-persistent.yaml
+kubectl delete -f postgres-secret.yaml
+kubectl delete -f postgres-configmap.yaml
+
 ----
 
 === Delete Non persistent version
 
 [source, bash]
 ----
-kubectl delete service postgres 
-kubectl delete deployment postgres
-kubectl delete configmap postgres-config
-kubectl delete persistentvolumeclaim postgres-pv-claim
-kubectl delete persistentvolume postgres-pv-volume
+kubectl delete -f postgres-service.yaml
+kubectl delete -f postgres-deployment-persistent.yaml
+kubectl delete -f postgres-pv-claim.yaml
+kubectl delete -f postgres-pv-volume.yaml
+kubectl delete -f postgres-secret.yaml
+kubectl delete -f postgres-configmap.yaml
 ----
 
 == Links
