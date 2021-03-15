@@ -5,12 +5,15 @@ Deploy postgres:13.1
 - non persistent version
 - persistent version using NFS as store
 
-Credentials for postgres is set in postgres-configmap.yaml
+Credentials for postgres is set in postgres-secret.yaml (aGliZXJuYXRl : hibernate)
+
+    postgres-user: aGliZXJuYXRl
+    postgres-password: aGliZXJuYXRl
+
+Database name for postgres is set in postgres-configmap.yaml
 
     POSTGRES_DB: hibernate_db
-    POSTGRES_USER: hibernate
-    POSTGRES_PASSWORD: hibernate
-
+    
 Exposed ports
 
 - 5432
@@ -86,5 +89,7 @@ kubectl delete -f postgres-configmap.yaml
 ----
 
 == Links
+
+https://operatorhub.io/operator/postgresql
 
 https://severalnines.com/database-blog/using-kubernetes-deploy-postgresql[Using Kubernetes to Deploy PostgreSQL | Severalnines]

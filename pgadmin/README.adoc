@@ -5,11 +5,14 @@ Deploy dpage/pgadmin4:5
 - non persistent version
 - persistent version using NFS as store
 
-Credentials for pgAdmin4 is set in pgadmin-configmap.yaml
+Credentials for pgAdmin4 is set in pgadmin-secret.yaml (bXlzZWNyZXRwYXNzd29yZA== : mysecretpassword)
+
+    gadmin-password: bXlzZWNyZXRwYXNzd29yZA==
+
+Username for pgAdmin4 is set in pgadmin-configmap.yaml
 
     PGADMIN_DEFAULT_EMAIL: pgadmin@jarry.dk
-    PGADMIN_DEFAULT_PASSWORD: mysecretpassword
-
+    
 Exposed ports
 
 - 80
