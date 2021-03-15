@@ -5,6 +5,4 @@ metadata:
   labels:
     app: postgres
 data:
-  POSTGRES_DB: hibernate_db
-  POSTGRES_USER: hibernate
-  POSTGRES_PASSWORD: hibernate
+  POSTGRES_DB: hibernate_db  

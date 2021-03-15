@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
 spec:
@@ -7,6 +7,8 @@ spec:
   selector:
     matchLabels:
       app: postgres
+  serviceName: postgres
+  replicas: 1
   template:
     metadata:
       labels:
@@ -21,21 +23,15 @@ spec:
           envFrom:
             - configMapRef:
                 name: postgres-config
-          env:
-          - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                name: postgres-secret
-                key: postgres-user
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: postgres-secret
-                key: postgres-password      
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgredb
-      volumes:
-        - name: postgredb
-          persistentVolumeClaim:
-            claimName: postgres-pv-claim
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+      

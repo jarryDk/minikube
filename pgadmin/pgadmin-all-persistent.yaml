@@ -6,7 +6,16 @@ metadata:
     app: pgadmin
 data:
   PGADMIN_DEFAULT_EMAIL: pgadmin@jarry.dk
-  PGADMIN_DEFAULT_PASSWORD: mysecretpassword
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: pgadmin-secret
+  labels:
+    app: pgadmin
+type: Opaque    
+data:  
+  pgadmin-password: bXlzZWNyZXRwYXNzd29yZA==
 ---
 kind: PersistentVolume
 apiVersion: v1
@@ -64,6 +73,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: pgadmin-config
+          env:
+          - name: PGADMIN_DEFAULT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pgadmin-secret
+                key: pgadmin-password
           volumeMounts:
             - mountPath: /var/lib/pgadmin
               name: pgadmindb

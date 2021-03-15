@@ -21,3 +21,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: pgadmin-config
+          env:
+          - name: PGADMIN_DEFAULT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pgadmin-secret
+                key: pgadmin-password      

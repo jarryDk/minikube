@@ -5,18 +5,9 @@ metadata:
   labels:
     app: postgres
 data:
-  POSTGRES_DB: hibernate_db  
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: postgres-secret
-  labels:
-    app: postgres
-type: Opaque    
-data:  
-  postgres-user: aGliZXJuYXRl
-  postgres-password: aGliZXJuYXRl
+  POSTGRES_DB: hibernate_db
+  POSTGRES_USER: hibernate
+  POSTGRES_PASSWORD: hibernate
 ---
 kind: PersistentVolume
 apiVersion: v1
@@ -34,22 +25,8 @@ spec:
     path: /mnt/data/postgres
     server: nfs.jarry.dk
 ---
-kind: PersistentVolumeClaim
-apiVersion: v1
-metadata:
-  name: postgres-pv-claim
-  labels:
-    app: postgres  
-spec:
-  storageClassName: ""
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 1Gi
----
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
 spec:
@@ -57,6 +34,8 @@ spec:
   selector:
     matchLabels:
       app: postgres
+  serviceName: postgres
+  replicas: 1
   template:
     metadata:
       labels:
@@ -71,24 +50,18 @@ spec:
           envFrom:
             - configMapRef:
                 name: postgres-config
-          env:
-          - name: POSTGRES_USER
-            valueFrom:
-              secretKeyRef:
-                name: postgres-secret
-                key: postgres-user
-          - name: POSTGRES_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: postgres-secret
-                key: postgres-password
           volumeMounts:
             - mountPath: /var/lib/postgresql/data
               name: postgredb
-      volumes:
-        - name: postgredb
-          persistentVolumeClaim:
-            claimName: postgres-pv-claim
+  volumeClaimTemplates:
+    - metadata:
+        name: postgredb
+      spec:
+        storageClassName: ""
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
 ---
 apiVersion: v1
 kind: Service

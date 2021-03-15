@@ -6,4 +6,3 @@ metadata:
     app: pgadmin
 data:
   PGADMIN_DEFAULT_EMAIL: pgadmin@jarry.dk
-  PGADMIN_DEFAULT_PASSWORD: mysecretpassword
