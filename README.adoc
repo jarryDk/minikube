@@ -11,21 +11,21 @@ minikube start --driver=podman --insecure-registry "192.168.1.0/24"
 
 === PostgreSQL
 
-Deploy postgres:13.1
+Deploy postgres:14.5
 
-link:postgres/README.adoc[postgres/README.adoc] 
+link:postgres/README.adoc[postgres/README.adoc]
 
 === pgAdmin
 
 Deploy dpage/pgadmin4:5
 
-link:pgadmin/README.adoc[pgadmin/README.adoc] 
+link:pgadmin/README.adoc[pgadmin/README.adoc]
 
 === Jaeger
 
-Deploy jaegertracing/all-in-one:1.21
+Deploy jaegertracing/all-in-one:1.37
 
-link:jaegertracing/README.adoc[jaegertracing/README.adoc] 
+link:jaegertracing/README.adoc[jaegertracing/README.adoc]
 
 == Commands
 

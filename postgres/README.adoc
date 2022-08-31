@@ -1,6 +1,6 @@
 = Postgres
 
-Deploy postgres:13.1
+Deploy postgres:14.5
 
 - non persistent version
 - persistent version using NFS as store

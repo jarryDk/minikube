@@ -1,6 +1,6 @@
 = Jaeger
 
-Deploy jaegertracing/all-in-one:1.21
+Deploy jaegertracing/all-in-one:1.37
 
 Exposed ports
 
