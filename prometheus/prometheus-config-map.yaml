@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-server-conf
+  labels:
+    name: prometheus-server-conf
+data:
+  prometheus.yml: |-
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+    rule_files:
+    scrape_configs:
+      - job_name: "prometheus"
+        static_configs:
+          - targets: ["127.0.0.1:9090"]
+      - job_name: "quarkus-todo-micrometer"
+        metrics_path: "/q/metrics"
+        scrape_interval: 3s
+        static_configs:
+          - targets: ["quarkus-todo:8080"]

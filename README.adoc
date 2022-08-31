@@ -27,6 +27,12 @@ Deploy jaegertracing/all-in-one:1.37
 
 link:jaegertracing/README.adoc[jaegertracing/README.adoc]
 
+=== Prometheus
+
+Deploy prom/prometheus:v2.38.0
+
+link:prometheus/README.adoc[prometheus/README.adoc]
+
 == Commands
 
 https://minikube.sigs.k8s.io/docs/commands/[Minikube commands]
