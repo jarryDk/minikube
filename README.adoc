@@ -163,3 +163,7 @@ https://kubernetes.io/docs/concepts/storage/persistent-volumes/[Persistent Volum
 Following https://mikebarkas.dev/2019/setup-nfs-for-minikube-persistent-storage/[Setup NFS For Minikube] can be a help.
 
 I stoped just before `Client Configuration` and is using `nfs` in configuration of volumes.
+
+== Links
+
+- https://minikube.sigs.k8s.io/docs/handbook/registry/
