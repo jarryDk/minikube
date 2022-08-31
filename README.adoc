@@ -1,10 +1,58 @@
 = Minekube
 
+== Minikube work
+
+https://kubernetes.io/docs/setup/learning-environment/minikube/
+
+`We need to set the environment variables with`
+[source,bash]
+----
+eval $(minikube docker-env)
+----
+
+`We can unset the environment variables with this command`
+[source,bash]
+----
+eval $(minikube docker-env -u)
+----
+
+[source,bash]
+----
+minikube start \
+    -p micbn
+	--cpus 4 \
+	--memory 4096 \
+	--disk-size 10g \
+	--vm-driver=kvm2
+----
+
 To be make it possible to deploy from "local" registry are we starting `minikub` like this.
 
 [source,bash]
 ----
-minikube start --driver=podman --insecure-registry "192.168.1.0/24"
+minikube start \
+    -p micbn \
+    --driver=podman \
+    --insecure-registry "192.168.1.0/24"
+----
+
+[source,bash]
+----
+minikube stop -p micbn
+----
+
+[source,bash]
+----
+minikube delete -p micbn
+----
+
+[source,bash]
+----
+minikube dashboard --url
+minikube service jaegertracing --url -p micbn
+minikube service pgadmin --url -p micbn
+minikube service postgresqldemo --url -p micbn
+minikube service prometheus --url -p micbn
 ----
 
 == Deployments
