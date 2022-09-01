@@ -4,13 +4,13 @@
 
 https://kubernetes.io/docs/setup/learning-environment/minikube/
 
-`We need to set the environment variables with`
+.We need to set the environment variables with
 [source,bash]
 ----
 eval $(minikube docker-env)
 ----
 
-`We can unset the environment variables with this command`
+.We can unset the environment variables with this command
 [source,bash]
 ----
 eval $(minikube docker-env -u)
