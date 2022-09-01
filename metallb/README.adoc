@@ -1,0 +1,19 @@
+= MetalLB Configuration in Minikube — To enable Kubernetes service of type “LoadBalancer”
+
+[source,bash]
+----
+kubectl apply -f hello-whale-blue.yml
+kubectl apply -f hello-whale-blue-svc.yml
+----
+
+[source,bash]
+----
+kubectl logs -l component=speaker -n metallb-system
+----
+
+[source,bash]
+----
+kubectl get svc
+----
+
+https://faun.pub/metallb-configuration-in-minikube-to-enable-kubernetes-service-of-type-loadbalancer-9559739787df

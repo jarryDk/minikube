@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-red-whale
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-red-whale-app
+  template:
+    metadata:
+      name: hello-red-whale-pod
+      labels:
+        app: hello-red-whale-app
+    spec:
+      containers:
+      - name: hello-red-whale-container
+        image: vamsijakkula/hello-blue-whale:v1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+      - name: regcred

@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-red-whale-svc
+  labels:
+    app: hello-red-whale-app
+spec:
+  selector:
+    app: hello-red-whale-app
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 80

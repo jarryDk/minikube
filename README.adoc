@@ -63,9 +63,49 @@ minikube service postgresqldemo --url -p micbn
 minikube service prometheus --url -p micbn
 ----
 
+== Metallb
+
+https://metallb.universe.tf/
+
+.Enable Metallb on Minekube
+[source,bash]
+----
+minikube addons enable metallb -p micbn
+----
+
+.Profiles on Minekube
+[source,bash]
+----
+minikube profile list
+----
+
+.Output from minikube profile list
+----
+|---------|-----------|---------|----------------|------|---------|---------|-------|--------|
+| Profile | VM Driver | Runtime |       IP       | Port | Version | Status  | Nodes | Active |
+|---------|-----------|---------|----------------|------|---------|---------|-------|--------|
+| micbn   | kvm2      | docker  | 192.168.39.220 | 8443 | v1.24.3 | Running |     1 |        |
+|---------|-----------|---------|----------------|------|---------|---------|-------|--------|
+----
+
+.Do we have free ip's in same range
+[source,bash]
+----
+nmap -sn 192.168.39.0/24
+----
+
+.Configure Metallb on Minekube
+[source,bash]
+----
+minikube addons configure metallb -p micbn
+----
+
+
+https://faun.pub/metallb-configuration-in-minikube-to-enable-kubernetes-service-of-type-loadbalancer-9559739787df
+
 == Registry
 
-.Enable registry on Minecube
+.Enable registry on Minekube
 [source,bash]
 ----
 minikube addons enable registry -p micbn
@@ -91,6 +131,9 @@ curl http://localhost:5000/v2/_catalog
 
 == Istio
 
+https://istio.io/
+
+
 .Install Istio into Minekube
 [source,bash]
 ----
@@ -109,7 +152,26 @@ kubectl -n istio-system get deploy
 kubectl -n istio-system get IstioOperator installed-state -o yaml > installed-istio-state.yaml
 ----
 
-https://istio.io/
+.Automatic sidecar injection
+[source,bash]
+----
+kubectl label namespace default istio-injection=enabled --overwrite
+----
+
+.Set Ingress IP
+[source,bash]
+----
+export INGRESS_HOST=$(kubectl get po -l istio=ingressgateway -n istio-system -o jsonpath='{.items[0].status.hostIP}')
+----
+
+.Set Ingress PORT
+[source,bash]
+----
+export INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
+----
+
+https://istio.io/latest/docs/tasks/traffic-management/ingress/ingress-control/#determining-the-ingress-ip-and-ports
+
 
 == Deployments
 
