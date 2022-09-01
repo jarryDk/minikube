@@ -4,6 +4,13 @@
 
 https://kubernetes.io/docs/setup/learning-environment/minikube/
 
+
+.Set default driver to kvm2
+[source,bash]
+----
+minikube config set driver kvm2
+----
+
 .We need to set the environment variables with
 [source,bash]
 ----
@@ -23,7 +30,7 @@ To be make it possible to deploy from "local" registry are we starting `Minikub`
 minikube start \
     -p micbn \
 	--cpus 4 \
-	--memory 4096 \
+	--memory 16384 \
 	--disk-size 10g \
 	--vm-driver=kvm2 \
 	--insecure-registry "192.168.1.0/24"
@@ -49,7 +56,7 @@ minikube delete -p micbn
 
 [source,bash]
 ----
-minikube dashboard --url
+minikube dashboard --url -p micbn
 minikube service jaegertracing --url -p micbn
 minikube service pgadmin --url -p micbn
 minikube service postgresqldemo --url -p micbn
@@ -70,11 +77,39 @@ minikube addons enable registry -p micbn
 kubectl port-forward --namespace kube-system service/registry 5000:80
 ----
 
+.Get ip of registry
+[source,bash]
+----
+kubectl get services --namespace=kube-system
+----
+
 .Test connection to registry
 [source,bash]
 ----
 curl http://localhost:5000/v2/_catalog
 ----
+
+== Istio
+
+.Install Istio into Minekube
+[source,bash]
+----
+istioctl install
+----
+
+.See progress of Install Istio into Minekube
+[source,bash]
+----
+kubectl -n istio-system get deploy
+----
+
+.Inspect the installed-state CR
+[source,bash]
+----
+kubectl -n istio-system get IstioOperator installed-state -o yaml > installed-istio-state.yaml
+----
+
+https://istio.io/
 
 == Deployments
 

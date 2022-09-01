@@ -8,4 +8,8 @@ kubectl apply -f postgres-statefulset-persistent.yaml
 # kubectl apply -f postgres-deployment-persistent.yaml
 kubectl apply -f postgres-service.yaml
 
+echo "--------------------------------------"
+kubectl describe svc postgres
+echo "--------------------------------------"
+
 minikube service postgres --url
