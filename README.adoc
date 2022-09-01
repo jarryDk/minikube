@@ -16,17 +16,18 @@ eval $(minikube docker-env)
 eval $(minikube docker-env -u)
 ----
 
+To be make it possible to deploy from "local" registry are we starting `Minikub` with the option `--insecure-registry`.
+
 [source,bash]
 ----
 minikube start \
-    -p micbn
+    -p micbn \
 	--cpus 4 \
 	--memory 4096 \
 	--disk-size 10g \
-	--vm-driver=kvm2
+	--vm-driver=kvm2 \
+	--insecure-registry "192.168.1.0/24"
 ----
-
-To be make it possible to deploy from "local" registry are we starting `minikub` like this.
 
 [source,bash]
 ----
@@ -53,6 +54,26 @@ minikube service jaegertracing --url -p micbn
 minikube service pgadmin --url -p micbn
 minikube service postgresqldemo --url -p micbn
 minikube service prometheus --url -p micbn
+----
+
+== Registry
+
+.Enable registry on Minecube
+[source,bash]
+----
+minikube addons enable registry -p micbn
+----
+
+.port-forward to registry - available on localhost:5000
+[source,bash]
+----
+kubectl port-forward --namespace kube-system service/registry 5000:80
+----
+
+.Test connection to registry
+[source,bash]
+----
+curl http://localhost:5000/v2/_catalog
 ----
 
 == Deployments
