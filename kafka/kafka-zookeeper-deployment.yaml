@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-zookeeper
+  labels:
+    app.kubernetes.io/name: kafka-zookeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kafka-zookeeper
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: kafka-zookeeper
+    spec:
+      containers:
+        - name: kafka-zookeeper
+          image: docker.io/jarrydk/fedora-minimal-kafka-zookeeper:3.5.0
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 2181

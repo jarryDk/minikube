@@ -3,7 +3,7 @@ apiVersion: v1
 metadata:
   name: pgadmin-pv-claim
   labels:
-    app: pgadmin  
+    app: pgadmin
 spec:
   storageClassName: ""
   accessModes:

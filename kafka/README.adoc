@@ -1,0 +1,104 @@
+= Minekube - Kafka
+
+== Create PersistentVolume / PersistentVolumeClaim
+
+NOTE: Naming in this sektion is bad !
+
+[source.bash]
+----
+minikube ssh
+sudo mkdir -p /mnt/data/default/kafka-server-pv-broker1
+sudo mkdir -p /mnt/data/default/kafka-server-pv-broker2
+sudo mkdir -p /mnt/data/default/kafka-server-pv-broker3
+----
+
+=== PersistentVolume
+
+.kafka-server-pv-broker1.yaml
+[source.yaml]
+----
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: kafka-server-pv-broker1
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 4Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /mnt/data/default/kafka-server-pv-broker1
+----
+
+[source.bash]
+----
+kubectl apply -f kafka-server-pv-broker1.yaml
+----
+
+=== PersistentVolumeClaim
+
+.kafka-server-pv-broker1.yaml
+[source.yaml]
+----
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: kafka-server-broker1-pv-claim
+  labels:
+    app.kubernetes.io/name: kafka-server
+spec:
+  storageClassName: "manual"
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+----
+
+[source.bash]
+----
+kubectl apply -f kafka-server-pv-broker1.yaml
+----
+
+=== Links
+
+- https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/[Configure a Pod to Use a PersistentVolume for Storage]
+- https://kubernetes.io/docs/concepts/storage/persistent-volumes/[Persistent Volumes]
+
+== Create secret
+
+[source.bash]
+----
+kubectl create secret generic kafka-server-secret \
+	--from-file=/opt/apache/kafka/jarry_dk/broker1.jarry.dk.keystore.jks \
+	--from-file=/opt/apache/kafka/jarry_dk/broker2.jarry.dk.keystore.jks \
+	--from-file=/opt/apache/kafka/jarry_dk/broker3.jarry.dk.keystore.jks \
+	--from-file=/opt/apache/kafka/jarry_dk/kafka.client.truststore.jks \
+	--from-file=/opt/apache/kafka/jarry_dk/kafka.server.truststore.jks \
+	--from-literal=kafka-server-keystore-password=password1234 \
+	--from-literal=kafka-server-truststore-password=password1234
+----
+
+The output of the command can be seen in link:kafka-server-secret.yaml[kafka-server-secret.yaml]
+
+== Ingress
+
+https://docs.confluent.io/operator/current/co-staticportbased.html
+
+== Debug
+
+.nicolaka/netshoot
+[source.bash]
+----
+kubectl run tmp-shell --rm -i --tty --overrides='{"spec": {"hostNetwork": true}}'  --image nicolaka/netshoot
+----
+
+.dnsutils
+[source.bash]
+----
+kubectl apply -f https://k8s.io/examples/admin/dns/dnsutils.yaml
+kubectl exec -i -t dnsutils -- nslookup kafka-zookeeper
+----

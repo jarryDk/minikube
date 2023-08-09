@@ -35,7 +35,7 @@ spec:
   ports:
    - protocol: UDP
      port: 5775
-     targetPort: 5775 
+     targetPort: 5775
      name: udp-5775
    - protocol: UDP
      port: 6831

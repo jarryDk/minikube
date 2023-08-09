@@ -26,4 +26,4 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: pgadmin-secret
-                key: pgadmin-password      
+                key: pgadmin-password

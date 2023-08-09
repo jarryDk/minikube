@@ -1,11 +1,11 @@
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-  name: postgres-pv-claim
+  name: kafka-server-broker1-pv-claim
   labels:
-    app: postgres
+    app.kubernetes.io/name: kafka-server
 spec:
-  storageClassName: ""
+  storageClassName: "manual"
   accessModes:
     - ReadWriteMany
   resources:

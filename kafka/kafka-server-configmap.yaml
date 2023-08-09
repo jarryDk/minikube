@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-server-config
+  labels:
+    app.kubernetes.io/name: kafka-server
+data:
+  KAFKA_ZOOKEEPER_CONNECT: kafka-zookeeper:2181
