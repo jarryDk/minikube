@@ -84,6 +84,61 @@ kubectl create secret generic kafka-server-secret \
 
 The output of the command can be seen in link:kafka-server-secret.yaml[kafka-server-secret.yaml]
 
+== LoadBalancer on minikube
+
+
+=== Tunnel
+
+By default you can't use `LoadBalancer` on `minikube`, but `tunnel` is you friend.
+
+[source.bash]
+----
+minikube tunnel
+----
+
+=== port-forward
+
+[source.bash]
+----
+kubectl port-forward --address 127.0.2.21 service/kafka-server-broker1 9092:9092
+kubectl port-forward --address 127.0.2.21 service/kafka-server-broker1 9093:9093
+kubectl port-forward --address 127.0.2.22 service/kafka-server-broker2 9092:9092
+kubectl port-forward --address 127.0.2.22 service/kafka-server-broker2 9092:9092
+kubectl port-forward --address 127.0.2.23 service/kafka-server-broker3 9092:9092
+kubectl port-forward --address 127.0.2.23 service/kafka-server-broker3 9092:9092
+----
+
+=== Testing
+
+.Create topic
+[source.bash]
+----
+$KAFKA_HOME/bin/kafka-topics.sh \
+    --bootstrap-server broker1.jarry.dk:9092 \
+    --topic kafka-mod-entity-event \
+    --create
+----
+
+.Describe topic
+[source.bash]
+----
+$KAFKA_HOME/bin/kafka-topics.sh \
+    --bootstrap-server broker1.jarry.dk:9092 \
+    --topic kafka-mod-entity-event \
+    --describe
+----
+
+.Consume form topic
+[source.bash]
+----
+$KAFKA_HOME/bin/kafka-console-consumer.sh \
+    --bootstrap-server broker1.jarry.dk:9092 \
+    --topic kafka-mod-entity-even \
+    --from-beginning | jq
+----
+
+
+
 == Ingress
 
 https://docs.confluent.io/operator/current/co-staticportbased.html
@@ -102,3 +157,10 @@ kubectl run tmp-shell --rm -i --tty --overrides='{"spec": {"hostNetwork": true}}
 kubectl apply -f https://k8s.io/examples/admin/dns/dnsutils.yaml
 kubectl exec -i -t dnsutils -- nslookup kafka-zookeeper
 ----
+
+== Links
+
+- https://strimzi.io/[Strimzi provides a way to run an Apache Kafka cluster on Kubernetes in various deployment configurations.]
+- https://github.com/banzaicloud/koperator[Koperator is an open-source operator that automates the provisioning, management, and autoscaling of Apache Kafka clusters on Kubernetes]
+- https://learnk8s.io/kafka-ha-kubernetes[Designing and testing a highly available Kafka cluster on Kubernetes]
+- https://bitnami.com/stack/kafka/helm[Apache Kafka packaged by Bitnami]

@@ -18,4 +18,8 @@ kubectl apply -f kafka-server-pod-broker1.yaml
 kubectl apply -f kafka-server-pod-broker2.yaml
 kubectl apply -f kafka-server-pod-broker3.yaml
 
+kubectl apply -f kafka-server-service-broker1.yaml
+kubectl apply -f kafka-server-service-broker2.yaml
+kubectl apply -f kafka-server-service-broker3.yaml
+
 # minikube service kafka-server --url
