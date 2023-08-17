@@ -1,0 +1,70 @@
+= Keycloak
+
+https://www.keycloak.org/getting-started/getting-started-kube[Get started with Keycloak on Kubernetes]
+
+
+== Keycloak commands
+
+[source,bash]
+----
+cat keycloak.yaml | \
+sed "s/$$VERSION$$/22.0.1/" | \
+kubectl create -f -
+----
+
+[source,bash]
+----
+cat keycloak-ingress.yaml | \
+sed "s/KEYCLOAK_HOST/keycloak.$(minikube ip).nip.io/" | \
+kubectl create -f -
+----
+
+[source,bash]
+----
+KEYCLOAK_URL=https://keycloak.$(minikube ip).nip.io &&
+echo "" &&
+echo "Keycloak:                 $KEYCLOAK_URL" &&
+echo "Keycloak Admin Console:   $KEYCLOAK_URL/admin" &&
+echo "Keycloak Account Console: $KEYCLOAK_URL/realms/myrealm/account" &&
+echo ""
+----
+
+[source,bash]
+----
+KEYCLOAK_URL=http://$(minikube ip):$(kubectl get services/keycloak -o go-template='{{(index .spec.ports 0).nodePort}}') &&
+echo "" &&
+echo "Keycloak:                 $KEYCLOAK_URL" &&
+echo "Keycloak Admin Console:   $KEYCLOAK_URL/admin" &&
+echo "Keycloak Account Console: $KEYCLOAK_URL/realms/myrealm/account" &&
+echo ""
+----
+
+== Commands
+
+https://minikube.sigs.k8s.io/docs/commands/[Minikube commands]
+
+
+[source,bash]
+----
+minikube start
+----
+
+[source,bash]
+----
+minikube addons list
+----
+
+[source,bash]
+----
+minikube addons enable ingress
+----
+
+[source,bash]
+----
+minikube dashboard
+----
+
+[source,bash]
+----
+minikube tunnel
+----
