@@ -2,9 +2,128 @@
 
 https://www.keycloak.org/getting-started/getting-started-kube[Get started with Keycloak on Kubernetes]
 
+== Using microk8s
 
-== Keycloak commands
+https://microk8s.io/docs/getting-started[MicroK8s - Get started]
 
+.Start microk8s - enable addons - create alias
+[source,bash]
+----
+microk8s start
+microk8s status --wait-ready
+microk8s enable dns
+microk8s enable hostpath-storage
+microk8s enable ingress
+microk8s enable metallb
+microk8s status
+alias kubectl='microk8s kubectl'
+microk8s dashboard-proxy
+----
+
+NOTE: I used `192.168.2.17-192.168.2.116` as `IP address range`
+
+=== Create resources
+
+.Create pod and service
+[source,bash]
+----
+cat keycloak.yaml | \
+sed "s/$$VERSION$$/22.0.1/" | \
+microk8s kubectl create -f -
+----
+
+.Create ingress
+[source,bash]
+----
+EXTERNAL_IP=$(microk8s kubectl get service/keycloak  --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "EXTERNAL_IP : $EXTERNAL_IP"
+cat keycloak-ingress.yaml | \
+sed "s/KEYCLOAK_HOST/keycloak.$EXTERNAL_IP.nip.io/" | \
+microk8s kubectl create -f -
+----
+
+=== Access resources
+
+[source,bash]
+----
+EXTERNAL_IP=$(microk8s kubectl get service/keycloak  --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "EXTERNAL_IP : $EXTERNAL_IP"
+KEYCLOAK_URL=http://keycloak.$EXTERNAL_IP.nip.io:8080 &&
+echo "" &&
+echo "Keycloak:                 $KEYCLOAK_URL" &&
+echo "Keycloak Admin Console:   $KEYCLOAK_URL/admin" &&
+echo "Keycloak Account Console: $KEYCLOAK_URL/realms/myrealm/account" &&
+echo "Keycloak internal port:   $(microk8s kubectl get services/keycloak -o go-template='{{(index .spec.ports 0).nodePort}}')"  &&
+echo ""
+----
+
+[source,bash]
+----
+echo ""
+EXTERNAL_IP=$(microk8s kubectl get service/keycloak  --output jsonpath='{.status.loadBalancer.ingress[0].ip}')
+echo "EXTERNAL_IP:              $EXTERNAL_IP"
+KEYCLOAK_URL=http://$EXTERNAL_IP:$(microk8s kubectl get services/keycloak -o go-template='{{(index .spec.ports 0).nodePort}}') &&
+echo "" &&
+echo "Keycloak:                 $KEYCLOAK_URL" &&
+echo "Keycloak Admin Console:   $KEYCLOAK_URL/admin" &&
+echo "Keycloak Account Console: $KEYCLOAK_URL/realms/myrealm/account" &&
+echo ""
+----
+
+.Dump microk8s to $HOME/.kube/config
+----
+microk8s.kubectl config view --raw > $HOME/.kube/config
+----
+
+== Using minikube
+
+=== minikube commands
+
+https://minikube.sigs.k8s.io/docs/commands/[Minikube commands]
+
+.Start minikube for the fiste time using podman
+[source,bash]
+----
+minikube start --driver=podman --container-runtime=containerd
+----
+
+.Start minikube again
+[source,bash]
+----
+minikube start
+----
+
+.List .Add addons
+[source,bash]
+----
+minikube addons list
+----
+
+.Add addons to the setup
+[source,bash]
+----
+minikube addons enable ingress
+minikube addons enable metallb
+----
+
+NOTE: `IP address range` need to be configured in the namespace `metallb-system` +
+I use `127.0.2.117-127.0.2.216` as `IP address range` +
+https://metallb.universe.tf/configuration/_advanced_ipaddresspool_configuration/[metallb - metallbControlling automatic address allocation]
+
+.Start the dashboard
+[source,bash]
+----
+minikube dashboard
+----
+
+[source,bash]
+----
+minikube tunnel
+----
+
+=== Create resources
+
+.Create pod and service
 [source,bash]
 ----
 cat keycloak.yaml | \
@@ -12,12 +131,15 @@ sed "s/$$VERSION$$/22.0.1/" | \
 kubectl create -f -
 ----
 
+.Create ingress
 [source,bash]
 ----
 cat keycloak-ingress.yaml | \
 sed "s/KEYCLOAK_HOST/keycloak.$(minikube ip).nip.io/" | \
 kubectl create -f -
 ----
+
+=== Access resources
 
 [source,bash]
 ----
@@ -39,32 +161,13 @@ echo "Keycloak Account Console: $KEYCLOAK_URL/realms/myrealm/account" &&
 echo ""
 ----
 
-== Commands
+== Links
 
-https://minikube.sigs.k8s.io/docs/commands/[Minikube commands]
+- https://www.keycloak.org/getting-started/getting-started-kube[Get started with Keycloak on Kubernetes]
+- https://microk8s.io/docs/getting-started[MicroK8s - Get started]
+- https://minikube.sigs.k8s.io/docs/commands/[Minikube commands]
+- https://www.reddit.com/r/kubernetes/comments/mnbhjn/microk8s_service_externalip_stuck_on_pending/
 
 
-[source,bash]
-----
-minikube start
-----
 
-[source,bash]
-----
-minikube addons list
-----
 
-[source,bash]
-----
-minikube addons enable ingress
-----
-
-[source,bash]
-----
-minikube dashboard
-----
-
-[source,bash]
-----
-minikube tunnel
-----
